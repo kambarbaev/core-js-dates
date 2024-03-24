@@ -103,8 +103,10 @@ function getNextFriday(date) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  return daysInMonth;
 }
 
 /**
@@ -118,8 +120,11 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  let period = new Date(dateEnd) - new Date(dateStart);
+  period = period / (1000 * 60 * 60 * 24) + 1;
+
+  return period;
 }
 
 /**
@@ -139,8 +144,12 @@ function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const dateStart = new Date(period.start).getTime();
+  const dateEnd = new Date(period.end).getTime();
+  const dateToCheck = new Date(date).getTime();
+
+  return dateToCheck >= dateStart && dateToCheck <= dateEnd;
 }
 
 /**
@@ -154,8 +163,17 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  return new Date(date).toLocaleString('en-US', {
+    timeZone: 'UTC',
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+  });
 }
 
 /**
@@ -170,8 +188,18 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const startMonth = new Date(year, month - 1, 1).getDate();
+  const endMonth = new Date(year, month, 0).getDate();
+  let count = 0;
+
+  for (let i = startMonth; i <= endMonth; i += 1) {
+    const weekend = new Date(year, month - 1, i).getDay();
+    if (weekend === 0 || weekend === 6) {
+      count += 1;
+    }
+  }
+  return count;
 }
 
 /**
@@ -187,10 +215,15 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
-}
+function getWeekNumberByDate(date) {
+  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+  const weekNumber = Math.ceil(
+    (pastDaysOfYear + firstDayOfYear.getUTCDay() + 1) / 7
+  );
 
+  return weekNumber;
+}
 /**
  * Returns the date of the next Friday the 13th from a given date.
  * Friday the 13th is considered an unlucky day in some cultures.
@@ -202,8 +235,17 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  let nextFridayDate;
+
+  for (let i = 0; ; i += 1) {
+    nextFridayDate = new Date(date.getFullYear(), i, 13);
+
+    if (nextFridayDate.getUTCDay() === 4) {
+      break;
+    }
+  }
+  return nextFridayDate;
 }
 
 /**
