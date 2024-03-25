@@ -81,7 +81,7 @@ function getNextFriday(date) {
     6: 6,
   };
 
-  const currentDay = date.getDay();
+  const currentDay = date.getUTCDay();
   const daysUntilFriday = days[currentDay];
 
   if (currentDay === 5) {
